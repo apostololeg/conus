@@ -1,14 +1,18 @@
 define(
     [
         'jquery',
+        'core/menu',
         'core/conus'
     ],
-    function($, Conus) {
+    function($, Menu, Conus) {
 
         // $(document).on('deviceready', function() {
         //     console.log('deviceready');
 
-            var conus = new Conus($('.conus'));
+            var menu = new Menu($('.menu')),
+                conus = new Conus($('.conus'));
+
+
 
             conus.add('light', [
                 [0,0],

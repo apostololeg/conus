@@ -1,6 +1,8 @@
 body
 {
     -webkit-perspective: 1000px;
+    height: 100%;
+    font-family: Helvetica, Verdana, sans-serif;
 }
 
 .conus,
@@ -13,6 +15,7 @@ body
     margin: 0 auto;
 
     pointer-events: none;
+    -webkit-transition: transform .1s ease-put;
 }
 
 .conus .inner
@@ -40,6 +43,6 @@ body
     -webkit-transform-origin: 0 0;
             transform-origin: 0 0;
 
-    background: rgba(0,0,0,.07);
+    /* background: rgba(0,0,0,.05); */
     -webkit-transform-style: preserve-3d; */;
 }

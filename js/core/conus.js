@@ -3,7 +3,7 @@ define(
         'jquery',
         'modernizr',
         'lib/snap-svg',
-        'lib/tap'
+        'lib/pointer'
     ],
     function($, Modernizr, Snap) {
 
