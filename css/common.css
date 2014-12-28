@@ -5,6 +5,7 @@ body, html {height: 100%;width: 100%;}
 .button
 {
     padding: 10px;
-    border: 1px solid #000;
+    border: 1px solid rgba(0, 0, 0, 0.19);
     border-radius: 3px;
+    background-color: rgba(253, 253, 253, 0.65);
 }

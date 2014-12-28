@@ -7,21 +7,24 @@ define(
     ],
     function($, Modernizr, Snap) {
 
-        var prefix = Modernizr.prefixed,
+        var _sqr = function(a) {return Math.pow(a, 2)},
+            _sqrt = Math.sqrt,
+            prefix = Modernizr.prefixed,
             transformProp = prefix('transform'),
             strokeColor = '#000';
 
         /**
          * @constructor
          */
-        function Conus(domElem) {
+        function Conus(domElem, menu) {
             this.domElem = domElem.find('.inner');
             this.height = domElem.height();
             this.width = domElem.width();
             this.branches = [];
             this._rotate = 0;
 
-            $(document).on('pointermove', this._onPointerMove.bind(this));
+            $(document).on('pointerdrug', this._onDrug.bind(this));
+            menu.domElem.on('check', this._onMenu.bind(this));
         }
 
         $.extend(Conus.prototype, {
@@ -35,21 +38,46 @@ define(
 
             _build: function(id, points) {
                 var elem = Snap(this.width, this.height).addClass('plot id_' + id),
-                    startPoint;
+                    from;
 
                 elem.appendTo(this.domElem[0])
 
-                points.forEach(function(point, i) {
-                    if(!point[2]) {
-                        point[2] = startPoint ? startPoint[2] : strokeColor;
+                points.forEach(function(to, i) {
+                    if(!to[3]) {
+                        to[3] = from ? from[3] : strokeColor;
                     }
 
-                    console.log(i, point);
-                    i > 0 && elem
-                        .line(startPoint[0], startPoint[1], point[0], point[1])
-                        .attr({ stroke: point[2] });
+                    console.log(i, from, to);
+                    if(i > 0) {
+                        var length = _sqrt(
+                                _sqr(from[0] + to[0]) +
+                                _sqr(from[1] + to[1]) +
+                                _sqr(from[2] + to[2])),
+                            sqrt = _sqrt(
+                                _sqr(to[0] - from[0]),
+                                _sqr(to[1] - from[1])),
+                            C = {
+                                x: +(from[0] + length * (to[0] - from[0]) / sqrt).toFixed(3),
+                                y: +(from[0] + length * (to[1] - from[1]) / sqrt).toFixed(3)
+                            },
+                            angleY = +Math.cos(
+                                from[0]*to[0] + _sqr(from[2]) /
+                                (
+                                    _sqrt(_sqr(from[0]) + _sqr(from[2])) *
+                                    _sqrt(_sqr(to[0]) + _sqr(to[2]))
+                                )
+                            ).toFixed(3) * 180/Math.PI;
 
-                    startPoint = point;
+                        console.log(sqrt, C, angleY);
+
+                        elem
+                            .line(from[0], from[1], C.x, C.y)
+                            .attr({ stroke: to[3] })
+                            .transform('rotateY(' +angleY+ ')')
+
+                    }
+
+                    from = to;
                 });
 
                 return {
@@ -68,9 +96,17 @@ define(
                 });
             },
 
-            _onPointerMove: function(e, data) {
-                this._rotate += data.deltaY;
+            _updateRotation: function() {
                 this.domElem.css(transformProp, 'rotateX(' +this._rotate+ 'deg)');
+            },
+
+            _onDrug: function(e, data) {
+                this._rotate += data.deltaY;
+                this._updateRotation();
+            },
+
+            _onMenu: function(e, data) {
+                this.domElem.toggleClass('animate', data.item === 'animate')
             }
 
         });

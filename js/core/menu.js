@@ -43,7 +43,7 @@ define(
                 this._clearActive();
                 newMode && this._setActive(mode);
 
-                this.domElem.trigger('check', this.state);
+                this.domElem.trigger('check', { item: this.state });
             }
 
         });

@@ -28,6 +28,9 @@ body
 .conus .axis
 {
      border-bottom: 2px solid #000;
+     top: 100%;
+     position: absolute;
+     width: 100%;
 }
 
 .conus .plot
@@ -45,4 +48,19 @@ body
 
     /* background: rgba(0,0,0,.05); */
     -webkit-transform-style: preserve-3d; */;
+}
+
+.animate
+{
+    -webkit-animation: linear overview 120s infinite;
+            animation: linear overview 120s infinite;
+}
+
+@-webkit-keyframes overview {
+    from {
+        transform: rotateX(0deg);
+    }
+    to {
+        transform: rotateX(360deg);
+    }
 }

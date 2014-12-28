@@ -31,6 +31,8 @@ define(
         }
 
         function onMove(e) {
+            var pointer = getPointer(e);
+
             target = $(e.target);
 
             if(isPressed) {
@@ -43,12 +45,18 @@ define(
 
                 lastDelta = pointer;
 
-                target.trigger('pointermove', { deltaX: delta.x, deltaY: delta.y });
+                target.trigger('pointerdrug', {
+                    deltaX: delta.x,
+                    deltaY: delta.y });
                 e.preventDefault();
             }
+
+            target.trigger('pointermove', pointer);
         }
 
         function onUp() {
+            var isTap = !lastDelta;
+
             isPressed = false;
             if(lastDelta) {
                 var deltaX = startDelta.x - lastDelta.x,
@@ -57,8 +65,9 @@ define(
                         && Math.abs(deltaY) < threshold;
 
                 lastDelta = null;
-                isTap && target.trigger('pointerclick');
             }
+
+            isTap && target.trigger('pointerclick');
         }
 
         $(document).on(events.down, onDown);
